@@ -1,11 +1,9 @@
 import signal
 import requests
 import time
-import sys
 import json
 
 js_headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
-ident = sys.argv[1]
 
 class DummyStdoutBlocker:
     def __init__(self):
