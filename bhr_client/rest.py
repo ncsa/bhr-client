@@ -61,4 +61,4 @@ class Client:
                 x += 1
                 time.sleep(2)
             else:
-                time.sleep(.5)
+                time.sleep(.01)
