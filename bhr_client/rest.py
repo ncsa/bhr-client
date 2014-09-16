@@ -28,12 +28,14 @@ class Client:
     def set_unblocked(self, records):
         ids = [r['id'] for r in records]
         data = json.dumps({"ids":ids})
-        print self.s.post('http://localhost:8000/bhr/api/set_unblocked_multi', data=data, headers=js_headers).json()
+        resp = self.s.post('http://localhost:8000/bhr/api/set_unblocked_multi', data=data, headers=js_headers).json()
+        resp.raise_for_status()
 
     def set_blocked(self, records):
         ids = [r['id'] for r in records]
         data = json.dumps({"ids":ids})
-        print self.s.post('http://localhost:8000/bhr/api/set_blocked_multi/%s' % self.ident, data=data,headers=js_headers).json()
+        resp = self.s.post('http://localhost:8000/bhr/api/set_blocked_multi/%s' % self.ident, data=data,headers=js_headers).json()
+        resp.raise_for_status()
 
     def do_block(self):
         signal.alarm(30)
