@@ -33,7 +33,7 @@ class Client:
     def set_blocked(self, records):
         ids = [r['id'] for r in records]
         data = json.dumps({"ids":ids})
-        print self.s.post('http://localhost:8000/bhr/api/set_blocked_multi/%s' % ident, data=data,headers=js_headers).json()
+        print self.s.post('http://localhost:8000/bhr/api/set_blocked_multi/%s' % self.ident, data=data,headers=js_headers).json()
 
     def do_block(self):
         signal.alarm(30)
@@ -45,7 +45,7 @@ class Client:
 
     def do_unblock(self):
         signal.alarm(30)
-        records = self.s.get('http://localhost:8000/bhr/api/unblock_queue/%s' % ident).json()
+        records = self.s.get('http://localhost:8000/bhr/api/unblock_queue/%s' % self.ident).json()
         if records:
             self.blocker.unblock_many(records)
             self.set_unblocked(records)
@@ -54,9 +54,9 @@ class Client:
     def run(self):
         x = 0
         while True:
-            did = do_block()
+            did = self.do_block()
             if x % 10 == 0:
-                did = did or do_unblock()
+                did = did or self.do_unblock()
             if not did:
                 x += 1
                 time.sleep(2)
