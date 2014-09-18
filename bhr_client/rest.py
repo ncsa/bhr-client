@@ -26,6 +26,16 @@ class Client:
         self.s = s
         self.blocker = blocker
 
+    def block(self, cidr, source, why, duration=300, skip_whitelist=0):
+        record = {
+            'cidr': cidr,
+            'source': source,
+            'why': why,
+            'duration': duration,
+            'skip_whitelist': skip_whitelist,
+        }
+        return self.s.post('http://localhost:8000/bhr/api/block', data=record).json()
+
     def get_list(self):
         r = self.s.get('http://localhost:8000/bhr/list.csv')
         return csv.DictReader(r.iter_lines())
