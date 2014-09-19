@@ -69,16 +69,3 @@ class Client:
             self.blocker.unblock_many(records)
             self.set_unblocked(records)
         return bool(records)
-
-    def run(self):
-        x = 0
-        while True:
-            signal.alarm(30)
-            did = self.do_block()
-            if x % 10 == 0:
-                did = did or self.do_unblock()
-            if not did:
-                x += 1
-                time.sleep(2)
-            else:
-                time.sleep(.01)
