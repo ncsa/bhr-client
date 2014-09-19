@@ -12,7 +12,7 @@ class DummyStdoutBlocker:
         for r in records:
             print time.ctime(), "unblock", r['block']['cidr']
 
-class BlockManger:
+class BlockManager:
     def __init__(self, client, blocker):
         self.client = client
         self.blocker = blocker

@@ -5,7 +5,7 @@ import sys
 def main():
     ident = sys.argv[1]
 
-    c = Client(ident)
+    client = Client(ident)
     blocker = DummyStdoutBlocker()
     m = BlockManager(client, blocker)
     m.run()
