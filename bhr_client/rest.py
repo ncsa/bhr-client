@@ -69,3 +69,7 @@ class Client:
             self.blocker.unblock_many(records)
             self.set_unblocked(records)
         return bool(records)
+
+    def get_expected(self, source=None):
+        params = {'source': source}
+        return self.s.get('http://localhost:8000/bhr/api/expected_blocks/', params=params).json()
