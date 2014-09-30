@@ -9,6 +9,10 @@ class SourceBlocker:
     def source(self):
         raise Exception("override source attribute")
 
+    @property
+    def duration(self):
+        raise Exception("override duration attribute")
+
     def setup(self):
         pass
 
@@ -17,13 +21,23 @@ class SourceBlocker:
 
     def run(self):
         wanted = set()
+        current = self.client.get_expected(self.source)
+        current_cidrs = set(x['cidr'] for x in current)
         for record in self.get_records():
+            cidr = record['cidr']
+            if '/' not in cidr:
+                cidr += '/32'
+            wanted.add(cidr)
+            if cidr in current_cidrs:
+                continue
             print "Block", record
+            record['source'] = self.source
+            record['duration'] = self.duration
             self.client.block(**record)
-            wanted.add(record['cidr'])
 
         if self.must_exist:
             for x in self.client.get_expected(self.source):
-                if x['cidr'] not in wanted:
-                    print "Remove", x
-                    self.client.unblock_now(x['cidr'], "removed from source")
+                if x['cidr'] in wanted or x['cidr'] + '/32' in wanted:
+                    continue
+                print "Remove", x
+                self.client.unblock_now(x['cidr'], "removed from source")
