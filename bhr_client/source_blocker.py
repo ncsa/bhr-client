@@ -25,4 +25,5 @@ class SourceBlocker:
         if self.must_exist:
             for x in self.client.get_expected(self.source):
                 if x['cidr'] not in wanted:
-                    print "Need to remove", x
+                    print "Remove", x
+                    self.client.unblock_now(x['cidr'], "removed from source")

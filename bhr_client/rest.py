@@ -26,6 +26,10 @@ class Client:
         self.s = s
         self.blocker = blocker
 
+    def post_json(self, url, data):
+        data = json.dumps(data)
+        return self.s.post('http://localhost:8000' + url, data, headers=js_headers).json()
+
     def block(self, cidr, source, why, duration=300, skip_whitelist=0):
         record = {
             'cidr': cidr,
@@ -44,11 +48,13 @@ class Client:
         ids = [r['id'] for r in records]
         data = json.dumps({"ids":ids})
         resp = self.s.post('http://localhost:8000/bhr/api/set_unblocked_multi', data=data, headers=js_headers).json()
+        return resp
 
     def set_blocked(self, records):
         ids = [r['id'] for r in records]
         data = json.dumps({"ids":ids})
         resp = self.s.post('http://localhost:8000/bhr/api/set_blocked_multi/%s' % self.ident, data=data,headers=js_headers).json()
+        return resp
 
     def get_block_queue(self):
         return self.s.get('http://localhost:8000/bhr/api/queue/%s' % self.ident).json()
@@ -73,3 +79,10 @@ class Client:
     def get_expected(self, source=None):
         params = {'source': source}
         return self.s.get('http://localhost:8000/bhr/api/expected_blocks/', params=params).json()
+
+    def unblock_now(self, cidr, why):
+        data = {
+            "cidr": cidr,
+            "why": why,
+        }
+        return self.post_json("/bhr/api/unblock_now", data=data)
