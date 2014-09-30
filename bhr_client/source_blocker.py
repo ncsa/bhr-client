@@ -39,5 +39,5 @@ class SourceBlocker:
             for cidr in current_cidrs:
                 if cidr in wanted or cidr + '/32' in wanted:
                     continue
-                print "Remove", x
+                print "Remove", cidr
                 self.client.unblock_now(cidr, "removed from source")
