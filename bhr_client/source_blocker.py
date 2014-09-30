@@ -36,8 +36,8 @@ class SourceBlocker:
             self.client.block(**record)
 
         if self.must_exist:
-            for x in self.client.get_expected(self.source):
-                if x['cidr'] in wanted or x['cidr'] + '/32' in wanted:
+            for cidr in current_cidrs:
+                if cidr in wanted or cidr + '/32' in wanted:
                     continue
                 print "Remove", x
-                self.client.unblock_now(x['cidr'], "removed from source")
+                self.client.unblock_now(cidr, "removed from source")
