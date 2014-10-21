@@ -35,6 +35,13 @@ class Client:
         }
         return self.s.post(self.host + '/bhr/api/block', data=record).json()
 
+    def unblock_now(self, cidr, why):
+        data = {
+            "cidr": cidr,
+            "why": why,
+        }
+        return self.post_json("/bhr/api/unblock_now", data=data)
+
     def get_list(self):
         r = self.s.get('http://localhost:8000/bhr/list.csv')
         return csv.DictReader(r.iter_lines())
@@ -59,13 +66,6 @@ class Client:
     def get_expected(self, source=None):
         params = {'source': source}
         return self.get_json('/bhr/api/expected_blocks/', params=params)
-
-    def unblock_now(self, cidr, why):
-        data = {
-            "cidr": cidr,
-            "why": why,
-        }
-        return self.post_json("/bhr/api/unblock_now", data=data)
 
 def login(host, token=None, username=None, password=None, ident=None):
     s = requests.session()
