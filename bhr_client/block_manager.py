@@ -32,12 +32,14 @@ class BlockManager:
         return bool(records)
 
     def run_once(self):
-        did = self.do_block()
-        did = did or self.do_unblock()
+        did = self.do_unblock()
+        did = did or self.do_block()
         return did
 
     def run(self):
         x = 0
+        signal.alarm(30)
+        self.do_unblock()
         while True:
             signal.alarm(30)
             did = self.do_block()
