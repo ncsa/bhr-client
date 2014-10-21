@@ -6,25 +6,12 @@ import csv
 
 js_headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
 
-class DummyStdoutBlocker:
-    def __init__(self):
-        pass
-
-    def block_many(self, records):
-        for r in records:
-            print time.ctime(), "block", r['cidr']
-
-    def unblock_many(self, records):
-        for r in records:
-            print time.ctime(), "unblock", r['block']['cidr']
-
 class Client:
-    def __init__(self, ident, blocker=DummyStdoutBlocker()):
+    def __init__(self, ident=None):
         self.ident = ident
         s = requests.session()
         s.headers["Authorization"]="Token 003f656f26cadb7f0d4cfdf2771fc337010e3400"
         self.s = s
-        self.blocker = blocker
 
     def post_json(self, url, data):
         data = json.dumps(data)
@@ -61,20 +48,6 @@ class Client:
 
     def get_unblock_queue(self):
         return self.s.get('http://localhost:8000/bhr/api/unblock_queue/%s' % self.ident).json()
-
-    def do_block(self):
-        records = self.get_block_queue()
-        if records:
-            self.blocker.block_many(records)
-            self.set_blocked(records)
-        return bool(records)
-
-    def do_unblock(self):
-        records = self.get_unblock_queue()
-        if records:
-            self.blocker.unblock_many(records)
-            self.set_unblocked(records)
-        return bool(records)
 
     def get_expected(self, source=None):
         params = {'source': source}
