@@ -1,11 +1,8 @@
-from bhr_client.rest import Client
+from bhr_client.rest import login_from_env
 from bhr_client.block_manager import BlockManager, DummyStdoutBlocker
-import sys
 
 def main():
-    ident = sys.argv[1]
-
-    client = Client(ident)
+    client = login_from_env()
     blocker = DummyStdoutBlocker()
     m = BlockManager(client, blocker)
     m.run()

@@ -3,17 +3,16 @@ import requests
 import time
 import json
 import csv
+import os
 
 js_headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
 
 class Client:
-    def __init__(self, ident=None):
+    def __init__(self, host, session, ident=None):
         if ident:
             self.ident = ident
-        s = requests.session()
-        s.headers["Authorization"]="Token 003f656f26cadb7f0d4cfdf2771fc337010e3400"
-        self.host = 'http://localhost:8000'
-        self.s = s
+        self.host = host
+        self.s = session
 
     @property
     def ident(self):
@@ -67,3 +66,26 @@ class Client:
             "why": why,
         }
         return self.post_json("/bhr/api/unblock_now", data=data)
+
+def login(host, token=None, username=None, password=None, ident=None):
+    s = requests.session()
+    authenticated = False
+    if token:
+        s.headers["Authorization"] = "Token " + token
+        authenticated = True
+    if username and password:
+        s.auth = (username, password)
+        authenticated = True
+
+    if not authenticated:
+        raise Exception("token or (username + password) required")
+    return Client(host, s, ident)
+
+def login_from_env():
+    s = requests.session()
+    host = os.environ["BHR_HOST"]
+    ident = os.environ.get("BHR_IDENT")
+    token = os.environ.get("BHR_TOKEN")
+    username = os.environ.get("BHR_USERNAME")
+    password = os.environ.get("BHR_PASSWORD")
+    return login(host, token, username, password, ident)
