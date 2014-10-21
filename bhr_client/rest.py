@@ -8,10 +8,15 @@ js_headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
 
 class Client:
     def __init__(self, ident=None):
-        self.ident = ident
+        if ident:
+            self.ident = ident
         s = requests.session()
         s.headers["Authorization"]="Token 003f656f26cadb7f0d4cfdf2771fc337010e3400"
         self.s = s
+
+    @property
+    def ident(self):
+        raise Exception("ident is not set")
 
     def post_json(self, url, data):
         data = json.dumps(data)
