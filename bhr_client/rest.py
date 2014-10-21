@@ -12,6 +12,7 @@ class Client:
             self.ident = ident
         s = requests.session()
         s.headers["Authorization"]="Token 003f656f26cadb7f0d4cfdf2771fc337010e3400"
+        self.host = 'http://localhost:8000'
         self.s = s
 
     @property
@@ -20,7 +21,10 @@ class Client:
 
     def post_json(self, url, data):
         data = json.dumps(data)
-        return self.s.post('http://localhost:8000' + url, data, headers=js_headers).json()
+        return self.s.post(self.host + url, data, headers=js_headers).json()
+
+    def get_json(self, url, params=None):
+        return self.s.get(self.host + url, params=params).json()
 
     def block(self, cidr, source, why, duration=300, skip_whitelist=0):
         record = {
@@ -30,7 +34,7 @@ class Client:
             'duration': duration,
             'skip_whitelist': skip_whitelist,
         }
-        return self.s.post('http://localhost:8000/bhr/api/block', data=record).json()
+        return self.s.post(self.host + '/bhr/api/block', data=record).json()
 
     def get_list(self):
         r = self.s.get('http://localhost:8000/bhr/list.csv')
@@ -38,25 +42,24 @@ class Client:
 
     def set_unblocked(self, records):
         ids = [r['id'] for r in records]
-        data = json.dumps({"ids":ids})
-        resp = self.s.post('http://localhost:8000/bhr/api/set_unblocked_multi', data=data, headers=js_headers).json()
-        return resp
+        data = {"ids":ids}
+        return self.post_json('/bhr/api/set_unblocked_multi', data)
 
     def set_blocked(self, records):
         ids = [r['id'] for r in records]
-        data = json.dumps({"ids":ids})
-        resp = self.s.post('http://localhost:8000/bhr/api/set_blocked_multi/%s' % self.ident, data=data,headers=js_headers).json()
+        data = {"ids":ids}
+        return self.post_json('/bhr/api/set_blocked_multi/' + self.ident, data)
         return resp
 
     def get_block_queue(self):
-        return self.s.get('http://localhost:8000/bhr/api/queue/%s' % self.ident).json()
+        return self.get_json('/bhr/api/queue/' + self.ident)
 
     def get_unblock_queue(self):
-        return self.s.get('http://localhost:8000/bhr/api/unblock_queue/%s' % self.ident).json()
+        return self.get_json('/bhr/api/unblock_queue/' + self.ident)
 
     def get_expected(self, source=None):
         params = {'source': source}
-        return self.s.get('http://localhost:8000/bhr/api/expected_blocks/', params=params).json()
+        return self.get_json('/bhr/api/expected_blocks/', params=params)
 
     def unblock_now(self, cidr, why):
         data = {
