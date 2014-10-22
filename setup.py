@@ -18,8 +18,12 @@ setup(name='bhr-client',
     install_requires=[
         "requests>=2.0",
     ],
+    extras_require = {
+        'cli' : ['Click'],
+    },
     entry_points = {
         'console_scripts': [
+            'bhr-client = bhr_client.cli:main',
             'bhr-client-run-stdout = bhr_client.run:main',
         ]
     }

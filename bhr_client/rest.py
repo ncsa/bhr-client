@@ -25,12 +25,13 @@ class Client:
     def get_json(self, url, params=None):
         return self.s.get(self.host + url, params=params).json()
 
-    def block(self, cidr, source, why, duration=300, skip_whitelist=0):
+    def block(self, cidr, source, why, duration=300, autoscale=0, skip_whitelist=0):
         record = {
             'cidr': cidr,
             'source': source,
             'why': why,
             'duration': duration,
+            'autoscale': autoscale,
             'skip_whitelist': skip_whitelist,
         }
         return self.s.post(self.host + '/bhr/api/block', data=record).json()
@@ -66,6 +67,9 @@ class Client:
     def get_expected(self, source=None):
         params = {'source': source}
         return self.get_json('/bhr/api/expected_blocks/', params=params)
+
+    def query(self, cidr):
+        return self.get_json('/bhr/api/query/' + cidr)
 
 def login(host, token=None, username=None, password=None, ident=None):
     s = requests.session()
