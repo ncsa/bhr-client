@@ -19,6 +19,12 @@ def query(client, cidr):
         click.echo("{cidr} {source} {who} {why} {added} {unblock_at}".format(**r))
 
 @cli.command()
+@click.pass_obj
+def list(client):
+    for r in client.get_expected():
+        click.echo(r['cidr'])
+
+@cli.command()
 @click.argument('cidr', nargs=-1)
 @click.option('--source', '-s', default='cli')
 @click.option('--why', '-w', required=True)
@@ -32,7 +38,7 @@ def block(client, cidr, source, why, duration, autoscale, skip_whitelist):
         if 'cidr' in block:
             click.echo("{cidr} {source} {who} {why} {added} {unblock_at}".format(**block))
         else:
-            click.echo(block)
+            click.secho(str(block), fg='red')
 
 @cli.command()
 @click.argument('cidr', nargs=-1)
