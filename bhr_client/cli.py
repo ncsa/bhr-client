@@ -25,6 +25,15 @@ def list(client):
         click.echo(r['cidr'])
 
 @cli.command()
+@click.pass_obj
+def stats(client):
+    stats = client.stats()
+    for k, v in stats.items():
+        K = k.replace("_", " ").title()
+        K = click.style(k, fg="green")
+        click.echo("%s: %d" % (K, v))
+
+@cli.command()
 @click.argument('cidr', nargs=-1)
 @click.option('--source', '-s', default='cli')
 @click.option('--why', '-w', required=True)

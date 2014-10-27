@@ -71,6 +71,9 @@ class Client:
     def query(self, cidr):
         return self.get_json('/bhr/api/query/' + cidr)
 
+    def stats(self):
+        return self.get_json('/bhr/api/stats')
+
 def login(host, token=None, username=None, password=None, ident=None):
     s = requests.session()
     authenticated = False
