@@ -44,7 +44,7 @@ class Client:
         return self.post_json("/bhr/api/unblock_now", data=data)
 
     def get_list(self):
-        r = self.s.get('http://localhost:8000/bhr/list.csv')
+        r = self.s.get(self.host + '/bhr/list.csv')
         return csv.DictReader(r.iter_lines())
 
     def set_unblocked(self, records):
