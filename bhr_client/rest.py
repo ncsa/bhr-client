@@ -20,10 +20,14 @@ class Client:
 
     def post_json(self, url, data):
         data = json.dumps(data)
-        return self.s.post(self.host + url, data, headers=js_headers).json()
+        resp =  self.s.post(self.host + url, data, headers=js_headers)
+        resp.raise_for_status()
+        return resp.json()
 
     def get_json(self, url, params=None):
-        return self.s.get(self.host + url, params=params).json()
+        resp = self.s.get(self.host + url, params=params)
+        resp.raise_for_status()
+        return resp.json()
 
     def block(self, cidr, source, why, duration=300, autoscale=0, skip_whitelist=0):
         record = {
@@ -34,7 +38,9 @@ class Client:
             'autoscale': autoscale,
             'skip_whitelist': skip_whitelist,
         }
-        return self.s.post(self.host + '/bhr/api/block', data=record).json()
+        resp = self.s.post(self.host + '/bhr/api/block', data=record)
+        resp.raise_for_status()
+        return resp.json()
 
     def unblock_now(self, cidr, why):
         data = {
