@@ -1,13 +1,16 @@
 import click
+import getpass
 from bhr_client.rest import login, login_from_env
 
 @click.group()
 @click.option("--host",     envvar="BHR_HOST",      default="localhost")
-@click.option("--username", envvar="BHR_USERNAME",  default=None)
-@click.option("--password", envvar="BHR_PASSWORD",  default=None)
-@click.option("--token",    envvar="BHR_TOKEN",     default=None)
+@click.option("--username", "-u", envvar="BHR_USERNAME",  default=None)
+@click.option("--password", "-p", envvar="BHR_PASSWORD",  default=None)
+@click.option("--token",    "-t", envvar="BHR_TOKEN",     default=None)
 @click.pass_context
 def cli(ctx, host, username, password, token):
+    if username and not password:
+        password = getpass.getpass("Password: ")
     client = login(host, token=token, username=username, password=password)
     ctx.obj = client
 
