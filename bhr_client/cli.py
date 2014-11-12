@@ -3,7 +3,7 @@ import getpass
 from bhr_client.rest import login, login_from_env
 
 @click.group()
-@click.option("--host",     envvar="BHR_HOST",      default="localhost")
+@click.option("--host",     envvar="BHR_HOST",      default="http://localhost")
 @click.option("--username", "-u", envvar="BHR_USERNAME",  default=None)
 @click.option("--password", "-p", envvar="BHR_PASSWORD",  default=None)
 @click.option("--token",    "-t", envvar="BHR_TOKEN",     default=None)
