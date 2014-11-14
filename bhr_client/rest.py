@@ -95,7 +95,6 @@ def login(host, token=None, username=None, password=None, ident=None):
     return Client(host, s, ident)
 
 def login_from_env():
-    s = requests.session()
     host = os.environ["BHR_HOST"]
     ident = os.environ.get("BHR_IDENT")
     token = os.environ.get("BHR_TOKEN")
