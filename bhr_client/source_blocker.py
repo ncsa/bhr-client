@@ -17,9 +17,14 @@ class SourceBlocker:
         pass
 
     def get_records(self):
-        return []
+        """Return a list of dictionaries of hosts to block.
+        The dictionaries should contain ``cidr`` and ``why`` fields.
+        """
+        raise NotImplementedError("Must implement get_records")
 
     def run(self):
+        """Run the blocker, adding or removing blocks as needed"""
+
         wanted = set()
         current = self.client.get_expected(self.source)
         current_cidrs = set(x['cidr'] for x in current)

@@ -16,6 +16,7 @@ Contents:
    usage
    api
    blockmanagers
+   blocksources
 
 
 Indices and tables
