@@ -1,5 +1,5 @@
-Writing a block manager
-=======================
+Block Managers
+==============
 
 In the BHR system blocks are handled by an external component called a blocker.
 
