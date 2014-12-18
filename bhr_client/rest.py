@@ -36,7 +36,7 @@ class Client:
         :param cidr: The IP Address or CIDR network to block
         :param source: The source for this block. i.e., where the intel came from
         :param why: The reason for the block
-        :param duration: The time to block in seconds, or a string like '1d'.  Accepted suffixes are 'y','mo','d','h','m','s'
+        :param duration: The time to block in seconds, or a string like '1d'.  Accepted suffixes are y, mo, d, h, m, s.
         :param autoscale: Whether or not to auto scale the duration based on server side block history
         :param skip_whitelist: Whether or not to bypass the server side whitelist
         """
