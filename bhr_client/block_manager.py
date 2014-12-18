@@ -37,6 +37,7 @@ class BlockManager:
         return did
 
     def run(self):
+        """Run the blocker, blocking and unblocking as needed"""
         x = 0
         signal.alarm(30)
         self.do_unblock()

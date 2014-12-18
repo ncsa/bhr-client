@@ -6,7 +6,7 @@ First, export the ``BHR_TOKEN`` and ``BHR_HOST`` environment variables::
     $ export BHR_TOKEN=abc91639287637189236193671983619783619c4
     $ export BHR_HOST=http://localhost:8000
 
-Then, you can create a client object::
+Then, you can create a :class:`bhr_client.rest.Client` object::
 
     $ python
     >>> from bhr_client.rest import login_from_env
