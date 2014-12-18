@@ -6,11 +6,15 @@
 Welcome to BHR Client's documentation!
 ======================================
 
+This is a client for the `BHR system <https://github.com/justinazoff/bhr-site>`_.
+
 Contents:
 
 .. toctree::
    :maxdepth: 2
 
+   usage
+   api
 
 
 Indices and tables
