@@ -111,7 +111,7 @@ class Client:
         """Return Current block stats"""
         return self.get_json('/bhr/api/stats')
 
-def login(host, token=None, username=None, password=None, ident=None):
+def login(host, token=None, username=None, password=None, ident=None, ssl_no_verify=False):
     """Create an authenticated client object.  To authenticate pass either a token or a username + password.
 
     :param host: the URL to the BHR system
@@ -128,6 +128,9 @@ def login(host, token=None, username=None, password=None, ident=None):
     if username and password:
         s.auth = (username, password)
         authenticated = True
+
+    if ssl_no_verify:
+        s.verify = False
 
     if not authenticated:
         raise Exception("token or (username + password) required")
@@ -149,4 +152,5 @@ def login_from_env():
     token = os.environ.get("BHR_TOKEN")
     username = os.environ.get("BHR_USERNAME")
     password = os.environ.get("BHR_PASSWORD")
-    return login(host, token, username, password, ident)
+    ssl_no_verify = bool(os.environ.get("BHR_SSL_NO_VERIFY"))
+    return login(host, token, username, password, ident, ssl_no_verify)
