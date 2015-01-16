@@ -7,11 +7,12 @@ from bhr_client.rest import login, login_from_env
 @click.option("--username", "-u", envvar="BHR_USERNAME",  default=None)
 @click.option("--password", "-p", envvar="BHR_PASSWORD",  default=None)
 @click.option("--token",    "-t", envvar="BHR_TOKEN",     default=None)
+@click.option("--ssl-no-verify", "-S", envvar="BHR_SSL_NO_VERIFY", default=False, is_flag=True)
 @click.pass_context
-def cli(ctx, host, username, password, token):
+def cli(ctx, host, username, password, token, ssl_no_verify):
     if username and not password:
         password = getpass.getpass("Password: ")
-    client = login(host, token=token, username=username, password=password)
+    client = login(host, token=token, username=username, password=password, ssl_no_verify=ssl_no_verify)
     ctx.obj = client
 
 @cli.command()
