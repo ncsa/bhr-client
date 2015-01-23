@@ -119,6 +119,7 @@ def login(host, token=None, username=None, password=None, ident=None, ssl_no_ver
     :param username:
     :param password:
     :param ident: Ident to use for backend block entry tracking
+    :param ssl_no_verify: Disable SSL certificate verification
     """
     s = requests.session()
     authenticated = False
@@ -145,6 +146,7 @@ def login_from_env():
         * ``BHR_USERNAME`` - mapped to username
         * ``BHR_PASSWORD`` - mapped to password
         * ``BHR_IDENT`` - mapped to ident
+        * ``BHR_SSL_NO_VERIFY`` - mapped to ssl_no_verify
     """
 
     host = os.environ["BHR_HOST"]
