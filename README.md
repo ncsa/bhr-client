@@ -1,5 +1,7 @@
 Work in progress client for BHR site.
 
+See http://bhr-client.readthedocs.org/en/latest/ for full docs
+
     $ export BHR_TOKEN=abc91639287637189236193671983619783619c4
     $ export BHR_HOST=http://localhost:8000
     $ python
