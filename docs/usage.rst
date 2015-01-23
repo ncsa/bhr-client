@@ -35,3 +35,6 @@ Then, you can create a :class:`bhr_client.rest.Client` object::
       u'url': u'http://localhost:8000/bhr/api/blocks/359147/',
       u'who': u'admin',
       u'why': u'because!'}]
+
+Instead of using :func:`bhr_client.rest.login_from_env` you can use 
+:func:`bhr_client.rest.login` explicitly.
