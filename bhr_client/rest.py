@@ -53,6 +53,20 @@ class Client:
         resp.raise_for_status()
         return resp.json()
 
+    def mblock(self, block_records):
+        """Send a batch block request.
+            :param block_records: A list of dictionaries whose keys are options to ':func:`block`'
+            For example:
+            block_records = [dict(
+                cidr=ip,
+                duration=30,
+                source="test",
+                why="testing",
+            ) for ip in ips]
+        """
+
+        return self.post_json('/bhr/api/mblock', block_records)
+
     def unblock_now(self, cidr, why):
         """Send an unblock request to the BHR system
 

@@ -28,6 +28,7 @@ class SourceBlocker:
         wanted = set()
         current = self.client.get_expected(self.source)
         current_cidrs = set(x['cidr'] for x in current)
+        block_records = []
         for record in self.get_records():
             cidr = record['cidr']
             if '/' not in cidr:
@@ -38,7 +39,8 @@ class SourceBlocker:
             print "Block", record
             record['source'] = self.source
             record['duration'] = self.duration
-            self.client.block(**record)
+            block_records.append(record)
+        self.client.mblock(block_records)
 
         if self.must_exist:
             for cidr in current_cidrs:
