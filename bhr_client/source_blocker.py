@@ -1,3 +1,8 @@
+def chunk(l, n):
+    """ Yield successive n-sized chunks from l.  """
+    for i in xrange(0, len(l), n):
+        yield l[i:i+n]
+
 class SourceBlocker:
     must_exist = False
 
@@ -40,7 +45,8 @@ class SourceBlocker:
             record['source'] = self.source
             record['duration'] = self.duration
             block_records.append(record)
-        self.client.mblock(block_records)
+        for blocks_chunk in chunk(block_records, 100):
+            self.client.mblock(blocks_chunk)
 
         if self.must_exist:
             for cidr in current_cidrs:
