@@ -1,5 +1,6 @@
 import signal
 import time
+import random
 class DummyStdoutBlocker:
     def __init__(self):
         pass
@@ -36,6 +37,13 @@ class BlockManager:
         did = did or self.do_block()
         return did
 
+    def random_sleep(self):
+        """Sleep for a random time
+        When running multiple blockers with a constant sleep, they eventually sync up.
+        Preventing them from syncing up will decrease the average block latency.
+        """
+        time.sleep(random.uniform(1.0, 1.5))
+
     def run(self):
         """Run the blocker, blocking and unblocking as needed"""
         x = 0
@@ -48,6 +56,6 @@ class BlockManager:
                 did = did or self.do_unblock()
             if not did:
                 x += 1
-                time.sleep(2)
+                self.random_sleep()
             else:
                 time.sleep(.01)
