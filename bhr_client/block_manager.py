@@ -23,7 +23,7 @@ class BlockManager:
         self.blocker = blocker
 
     def do_block(self):
-        records = self.client.get_block_queue(timeout=UNBLOCK_INTERVAL-2)
+        records = self.client.get_block_queue(timeout=UNBLOCK_INTERVAL+2)
         if records:
             self.blocker.block_many(records)
             self.client.set_blocked(records)
