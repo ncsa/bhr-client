@@ -104,8 +104,9 @@ class Client:
         return self.post_json('/bhr/api/set_blocked_multi/' + self.ident, data)
         return resp
 
-    def get_block_queue(self):
-        return self.get_json('/bhr/api/queue/' + self.ident)
+    def get_block_queue(self, timeout=0):
+        params = {"timeout": timeout}
+        return self.get_json('/bhr/api/queue/' + self.ident, params)
 
     def get_unblock_queue(self):
         return self.get_json('/bhr/api/unblock_queue/' + self.ident)

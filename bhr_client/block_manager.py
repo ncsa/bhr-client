@@ -1,6 +1,10 @@
 import signal
 import time
 import random
+
+WATCHDOG_TIMEOUT = 60 #seconds
+UNBLOCK_INTERVAL = 30 #seconds
+
 class DummyStdoutBlocker:
     def __init__(self):
         pass
@@ -19,7 +23,7 @@ class BlockManager:
         self.blocker = blocker
 
     def do_block(self):
-        records = self.client.get_block_queue()
+        records = self.client.get_block_queue(timeout=UNBLOCK_INTERVAL-2)
         if records:
             self.blocker.block_many(records)
             self.client.set_blocked(records)
@@ -37,25 +41,14 @@ class BlockManager:
         did = did or self.do_block()
         return did
 
-    def random_sleep(self):
-        """Sleep for a random time
-        When running multiple blockers with a constant sleep, they eventually sync up.
-        Preventing them from syncing up will decrease the average block latency.
-        """
-        time.sleep(random.uniform(1.0, 1.5))
-
     def run(self):
         """Run the blocker, blocking and unblocking as needed"""
-        x = 0
-        signal.alarm(30)
-        self.do_unblock()
+        since_unblock = 0
         while True:
-            signal.alarm(30)
-            did = self.do_block()
-            if x % 10 == 0:
-                did = did or self.do_unblock()
+            signal.alarm(WATCHDOG_TIMEOUT)
+            if time.time() - since_unblock > UNBLOCK_INTERVAL:
+                did = self.do_unblock()
+                since_unblock = time.time()
+            did = did or self.do_block()
             if not did:
-                x += 1
-                self.random_sleep()
-            else:
-                time.sleep(.01)
+                time.sleep(0.1)
