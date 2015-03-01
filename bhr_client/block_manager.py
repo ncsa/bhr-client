@@ -45,10 +45,11 @@ class BlockManager:
         """Run the blocker, blocking and unblocking as needed"""
         since_unblock = 0
         while True:
+            blocked = unblocked = False
             signal.alarm(WATCHDOG_TIMEOUT)
             if time.time() - since_unblock > UNBLOCK_INTERVAL:
-                did = self.do_unblock()
+                unblocked = self.do_unblock()
                 since_unblock = time.time()
-            did = did or self.do_block()
-            if not did:
+            blocked = self.do_block()
+            if not (blocked or unblocked):
                 time.sleep(0.1)
