@@ -39,14 +39,17 @@ class SourceBlocker:
             if '/' not in cidr:
                 cidr += '/32'
             wanted.add(cidr)
-            if cidr in current_cidrs:
+            #If we are blocking indefinitely, and it is already blocked, do nothing
+            if not self.duration and cidr in current_cidrs:
                 continue
-            print "Block", record
             record['source'] = self.source
             record['duration'] = self.duration
             record['extend'] = True
             block_records.append(record)
+
         for blocks_chunk in chunk(block_records, 100):
+            for record in blocks_chunk:
+                print "Block", record
             self.client.mblock(blocks_chunk)
 
         if self.must_exist:
