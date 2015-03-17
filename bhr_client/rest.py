@@ -30,7 +30,7 @@ class Client:
         resp.raise_for_status()
         return resp.json()
 
-    def block(self, cidr, source, why, duration=300, autoscale=0, skip_whitelist=0):
+    def block(self, cidr, source, why, duration=300, autoscale=False, skip_whitelist=False, extend=False):
         """Send a block request to the BHR system
 
         :param cidr: The IP Address or CIDR network to block
@@ -48,6 +48,7 @@ class Client:
             'duration': duration,
             'autoscale': autoscale,
             'skip_whitelist': skip_whitelist,
+            'extend': extend,
         }
         resp = self.s.post(self.host + '/bhr/api/block', data=record)
         resp.raise_for_status()
