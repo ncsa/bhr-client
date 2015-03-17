@@ -44,6 +44,7 @@ class SourceBlocker:
             print "Block", record
             record['source'] = self.source
             record['duration'] = self.duration
+            record['extend'] = True
             block_records.append(record)
         for blocks_chunk in chunk(block_records, 100):
             self.client.mblock(blocks_chunk)
