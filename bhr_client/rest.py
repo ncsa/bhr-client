@@ -84,6 +84,7 @@ class Client:
     def get_list(self):
         """Return a the current block list as a list of dictionaries"""
         r = self.s.get(self.host + '/bhr/list.csv')
+        r.raise_for_status()
         return csv.DictReader(r.iter_lines())
 
     def set_unblocked(self, records):
