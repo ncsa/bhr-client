@@ -20,7 +20,7 @@ def cli(ctx, host, username, password, token, ssl_no_verify):
 @click.pass_obj
 def query(client, cidr):
     for r in client.query(cidr):
-        click.echo("{cidr} {source} {who} {why} {added} {unblock_at}".format(**r))
+        click.echo("{cidr} {added} {unblock_at} {source} {who} {why}".format(**r))
 
 @cli.command()
 @click.pass_obj
