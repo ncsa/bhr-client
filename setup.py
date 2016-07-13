@@ -1,13 +1,13 @@
 from setuptools import setup, find_packages
 
-version = '0.14'
+version = '0.15'
 
 setup(name='bhr-client',
     version=version,
     description="BHR Client",
     long_description="",
     classifiers=[], # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
-    keywords='passive dns',
+    keywords='bhr',
     author='Justin Azoff',
     author_email='JAzoff@illinois.edu',
     url='',
