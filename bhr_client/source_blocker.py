@@ -24,6 +24,8 @@ class SourceBlocker:
     def get_records(self):
         """Return a list of dictionaries of hosts to block.
         The dictionaries should contain ``cidr`` and ``why`` fields.
+        They can also contain ``source`` and ``duration`` fields
+        to override the class attributes.
         """
         raise NotImplementedError("Must implement get_records")
 
@@ -39,12 +41,14 @@ class SourceBlocker:
             if '/' not in cidr:
                 cidr += '/32'
             wanted.add(cidr)
-            #If we are blocking indefinitely, and it is already blocked, do nothing
-            if not self.duration and cidr in current_cidrs:
-                continue
-            record['source'] = self.source
-            record['duration'] = self.duration
+            if 'source' not in record:
+                record['source'] = self.source
+            if 'duration' not in record:
+                record['duration'] = self.duration
             record['extend'] = True
+            #If we are blocking indefinitely, and it is already blocked, do nothing
+            if not record['duration'] and cidr in current_cidrs:
+                continue
             block_records.append(record)
 
         for blocks_chunk in chunk(block_records, 100):
