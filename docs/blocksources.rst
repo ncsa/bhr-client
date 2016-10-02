@@ -6,7 +6,7 @@ Blocking and unblocking addresses based on an intel source is a common task, so 
 
 To implement a source blocker, simply write a class that subclasses :class:`bhr_client.source_blocker.SourceBlocker`
 
-This example blocks addresses found in the Dragon Research Group SSH Password Authentication Report.
+This example blocks addresses found in the DataPlane.org SSH Password Authentication feed.
 
 ::
 
@@ -15,14 +15,14 @@ This example blocks addresses found in the Dragon Research Group SSH Password Au
     import requests
 
 
-    class DrgBlocker(SourceBlocker):
-        source = 'drg'
+    class DataplaneBlocker(SourceBlocker):
+        source = 'dataplane'
         must_exist = True
         duration = 0
 
         def get_records(self):
             blocks = []
-            for line in requests.get("https://www.dragonresearchgroup.org/insight/sshpwauth.txt").iter_lines():
+            for line in requests.get("https://www.dataplane.org/sshpwauth.txt").iter_lines():
                 if line.startswith("#"):
                     continue
                 parts = line.split("|")
@@ -32,7 +32,7 @@ This example blocks addresses found in the Dragon Research Group SSH Password Au
                 asn, asname, saddr, utc, category = parts
                 blocks.append({
                     'cidr': saddr,
-                    'why': 'DRG SSH list',
+                    'why': 'DataPlane SSH pwauth feed',
                 })
             return blocks
 
@@ -42,7 +42,7 @@ To use the blocker, you would write a main function like::
     from bhr_client.rest import login_from_env
     def main():
         client = login_from_env()
-        s = DrgBlocker(client)
+        s = DataplaneBlocker(client)
         s.run()
 
 To keep the BHR system in sync with the source, set ``must_exist`` to ``True``
