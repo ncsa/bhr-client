@@ -9,11 +9,12 @@ js_headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
 
 class Client:
     """BHR Client"""
-    def __init__(self, host, session, ident=None):
+    def __init__(self, host, session, ident=None, timeout=30):
         if ident:
             self.ident = ident
         self.host = host
         self.s = session
+        self.timeout = timeout
 
     @property
     def ident(self):
@@ -21,12 +22,13 @@ class Client:
 
     def post_json(self, url, data):
         data = json.dumps(data)
-        resp =  self.s.post(self.host + url, data, headers=js_headers)
+        resp =  self.s.post(self.host + url, data, headers=js_headers, timeout=self.timeout)
         resp.raise_for_status()
         return resp.json()
 
     def get_json(self, url, params=None):
-        resp = self.s.get(self.host + url, params=params)
+        extra_timeout = params['timeout'] if (params and 'timeout' in params) else 0
+        resp = self.s.get(self.host + url, params=params, timeout=self.timeout + extra_timeout)
         resp.raise_for_status()
         return resp.json()
 
@@ -50,7 +52,7 @@ class Client:
             'skip_whitelist': skip_whitelist,
             'extend': extend,
         }
-        resp = self.s.post(self.host + '/bhr/api/block', data=record)
+        resp = self.s.post(self.host + '/bhr/api/block', data=record, timeout=self.timeout)
         resp.raise_for_status()
         return resp.json()
 
@@ -83,7 +85,7 @@ class Client:
 
     def get_list(self):
         """Return a the current block list as a list of dictionaries"""
-        r = self.s.get(self.host + '/bhr/list.csv')
+        r = self.s.get(self.host + '/bhr/list.csv', timeout=self.timeout)
         r.raise_for_status()
         return csv.DictReader(r.iter_lines())
 
