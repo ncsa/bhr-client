@@ -21,12 +21,14 @@ class BlockManager:
     def __init__(self, client, blocker):
         self.client = client
         self.blocker = blocker
+        self._added_since = '2014-09-01'
 
     def do_block(self):
-        records = self.client.get_block_queue(timeout=UNBLOCK_INTERVAL+2)
+        records = self.client.get_block_queue(timeout=UNBLOCK_INTERVAL+2, added_since=self._added_since)
         if records:
             self.blocker.block_many(records)
             self.client.set_blocked(records)
+            self._added_since = records[-1]['added']
         return bool(records)
 
     def do_unblock(self):
