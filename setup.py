@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-version = '0.19'
+version = '0.20'
 
 setup(name='bhr-client',
     version=version,
@@ -17,6 +17,7 @@ setup(name='bhr-client',
     zip_safe=False,
     install_requires=[
         "requests>=2.0",
+        "arrow==0.10.0",
     ],
     extras_require = {
         'cli' : ['Click'],
