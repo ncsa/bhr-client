@@ -1,9 +1,21 @@
 import signal
 import time
 import random
+import arrow
+import datetime
 
 WATCHDOG_TIMEOUT = 60 #seconds
 UNBLOCK_INTERVAL = 30 #seconds
+
+def shift_backwards(ts, minutes=5):
+    """parse and shift a timestamp backwards 5 minutes"""
+    # I hate timestamps
+    nt = arrow.get(ts) - datetime.timedelta(minutes=minutes)
+    value = nt.isoformat()
+    # https://github.com/tomchristie/django-rest-framework/blob/cf5d401a0e60948ed0b3ad384c3f76fc30c3e222/rest_framework/fields.py#L1154
+    if value.endswith('+00:00'):
+        value = value[:-6] + 'Z'
+    return value
 
 class DummyStdoutBlocker:
     def __init__(self):
@@ -28,7 +40,7 @@ class BlockManager:
         if records:
             self.blocker.block_many(records)
             self.client.set_blocked(records)
-            self._added_since = records[-1]['added']
+            self._added_since = shift_backwards(records[-1]['added'])
         return bool(records)
 
     def do_unblock(self):
