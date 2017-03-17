@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-version = '1.00'
+version = '1.01'
 
 setup(name='bhr-client',
     version=version,
