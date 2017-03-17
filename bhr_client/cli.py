@@ -32,10 +32,16 @@ def list(client):
 @click.pass_obj
 def stats(client):
     stats = client.stats()
+    source_stats = stats.pop("sources")
     for k, v in stats.items():
         K = k.replace("_", " ").title()
         K = click.style(k, fg="green")
         click.echo("%s: %d" % (K, v))
+
+    for k, v in source_stats.items():
+        K = k.replace("_", " ").title()
+        K = click.style(k, fg="green")
+        click.echo("source %s: %d" % (K, v))
 
 @cli.command()
 @click.argument('cidr', nargs=-1)
