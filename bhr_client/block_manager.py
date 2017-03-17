@@ -50,6 +50,13 @@ class BlockManager:
             self.client.set_unblocked(records)
         return bool(records)
 
+    def block_all_expected(self):
+        """Block all addresses that are expected to be blocked
+           This is to be used for stateless backends like ExaBGP
+        """
+        blocks = self.client.get_list()
+        return self.blocker.block_many(blocks)
+
     def run_once(self):
         did = self.do_unblock()
         did = did or self.do_block()
