@@ -7,9 +7,11 @@ import os
 
 js_headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
 
+DEFAULT_TIMEOUT = 30
+
 class Client:
     """BHR Client"""
-    def __init__(self, host, session, ident=None, timeout=30):
+    def __init__(self, host, session, ident=None, timeout=DEFAULT_TIMEOUT):
         if ident:
             self.ident = ident
         self.host = host
@@ -133,7 +135,7 @@ class Client:
         """Return Current block stats"""
         return self.get_json('/bhr/api/stats')
 
-def login(host, token=None, username=None, password=None, ident=None, ssl_no_verify=False):
+def login(host, token=None, username=None, password=None, ident=None, ssl_no_verify=False, timeout=DEFAULT_TIMEOUT):
     """Create an authenticated client object.  To authenticate pass either a token or a username + password.
 
     :param host: the URL to the BHR system
@@ -157,7 +159,7 @@ def login(host, token=None, username=None, password=None, ident=None, ssl_no_ver
 
     if not authenticated:
         raise Exception("token or (username + password) required")
-    return Client(host, s, ident)
+    return Client(host, s, ident, timeout)
 
 def login_from_env():
     """Create an authenticated client object using environment variables.  This simply calls :func:`login`.
@@ -177,4 +179,5 @@ def login_from_env():
     username = os.environ.get("BHR_USERNAME")
     password = os.environ.get("BHR_PASSWORD")
     ssl_no_verify = bool(os.environ.get("BHR_SSL_NO_VERIFY"))
-    return login(host, token, username, password, ident, ssl_no_verify)
+    timeout = int(os.environ.get("BHR_TIMEOUT", DEFAULT_TIMEOUT))
+    return login(host, token, username, password, ident, ssl_no_verify, timeout)
