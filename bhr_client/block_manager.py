@@ -67,7 +67,7 @@ class BlockManager:
         since_unblock = 0
         while True:
             blocked = unblocked = False
-            signal.alarm(WATCHDOG_TIMEOUT)
+            signal.alarm(self.client.timeout + WATCHDOG_TIMEOUT)
             if time.time() - since_unblock > UNBLOCK_INTERVAL:
                 unblocked = self.do_unblock()
                 since_unblock = time.time()
