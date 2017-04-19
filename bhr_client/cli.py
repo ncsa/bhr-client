@@ -1,5 +1,6 @@
 import click
 import getpass
+import json
 from bhr_client.rest import login, login_from_env
 
 @click.group()
@@ -67,6 +68,14 @@ def unblock(client, cidr, why):
     for addr in cidr:
         resp = client.unblock_now(cidr=addr, why=why)
         click.echo(resp)
+
+@cli.command()
+@click.option('--source', '-s', required=False)
+@click.option('--start', required=False)
+@click.pass_obj
+def tail(client, source, start):
+    for rec in client.tail(source=source, start=start):
+        click.echo(json.dumps(rec))
 
 def main():
     cli()

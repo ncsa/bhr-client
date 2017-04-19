@@ -4,10 +4,38 @@ import time
 import json
 import csv
 import os
+import time
 
 js_headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
 
 DEFAULT_TIMEOUT = 30
+
+class Delayer:
+    def __init__(self, initial=0, lower=1, upper=60, factor=2, sleep=time.sleep):
+        self.initial = initial
+        self.lower = lower
+        self.upper = upper
+        self.factor = factor
+        self._sleep = sleep
+        self.reset()
+
+    def reset(self):
+        self.delay = self.initial
+
+    def sleep(self):
+        #logger.debug('sleeping for {}s'.format(self.delay))
+        self._sleep(self.delay)
+        if self.delay == 0:
+            self.delay = self.lower
+        else:
+            self.delay *= self.factor
+            self.delay = min(self.delay, self.upper)
+
+    def sleep_or_reset(self, had_data):
+        if had_data:
+            self.reset()
+        else:
+            self.sleep()
 
 class Client:
     """BHR Client"""
@@ -85,11 +113,31 @@ class Client:
         }
         return self.post_json("/bhr/api/unblock_now", data=data)
 
-    def get_list(self):
+    def get_list(self, source=None, since=None):
         """Return a the current block list as a list of dictionaries"""
-        r = self.s.get(self.host + '/bhr/list.csv', timeout=self.timeout)
+        params = {
+            'source': source,
+            'since': since,
+        }
+        r = self.s.get(self.host + '/bhr/list.csv', params=params, timeout=self.timeout)
         r.raise_for_status()
         return csv.DictReader(r.iter_lines())
+
+    def tail(self, source=None, start=None):
+        d = Delayer()
+        last_added = start
+        last_cidr = None
+        while True:
+            had_data = False
+            for r in self.get_list(source=source, since=last_added):
+                if r['added'] == last_added and r['cidr'] == last_cidr:
+                    continue
+                yield r
+                last_added = r['added']
+                last_cidr = r['cidr']
+                had_data = True
+            d.sleep_or_reset(had_data)
+            
 
     def set_unblocked(self, records):
         """Mark a block record as unblocked
