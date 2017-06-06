@@ -1,16 +1,16 @@
 from setuptools import setup, find_packages
 
-version = '1.3'
+version = '1.4'
 
 setup(name='bhr-client',
     version=version,
     description="BHR Client",
-    long_description="",
+    long_description="Client for the BHR Blackhole Router site",
     classifiers=[], # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
     keywords='bhr',
     author='Justin Azoff',
     author_email='JAzoff@illinois.edu',
-    url='',
+    url='https://github.com/ncsa/bhr-client',
     license='MIT',
     packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
     include_package_data=True,
