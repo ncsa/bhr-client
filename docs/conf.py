@@ -47,7 +47,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'BHR Client'
-copyright = u'2014, Justin Azoff'
+copyright = u'2014-2018, Justin Azoff, NCSA Security Operations'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
