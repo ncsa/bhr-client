@@ -51,10 +51,11 @@ def stats(client):
 @click.option('--duration', '-d', default='1d')
 @click.option('--autoscale', '-a', is_flag=True, default=False)
 @click.option('--skip-whitelist', is_flag=True, default=False)
+@click.option('--extend', is_flag=True, default=False)
 @click.pass_obj
-def block(client, cidr, source, why, duration, autoscale, skip_whitelist):
+def block(client, cidr, source, why, duration, autoscale, skip_whitelist, extend):
     for addr in cidr:
-        block = client.block(cidr=addr, source=source, why=why, duration=duration, autoscale=autoscale, skip_whitelist=skip_whitelist)
+        block = client.block(cidr=addr, source=source, why=why, duration=duration, autoscale=autoscale, skip_whitelist=skip_whitelist, extend=extend)
         if 'cidr' in block:
             click.echo("{cidr} {source} {who} {why} {added} {unblock_at}".format(**block))
         else:
