@@ -40,15 +40,20 @@ class Delayer:
 class Client:
     """BHR Client"""
     def __init__(self, host, session, ident=None, timeout=DEFAULT_TIMEOUT):
-        if ident:
-            self.ident = ident
+        self._ident = ident
         self.host = host
         self.s = session
         self.timeout = timeout
 
     @property
     def ident(self):
-        raise Exception("ident is not set")
+        if not self._ident:
+            raise Exception("required parameter 'ident' is not set")
+        return self._ident
+
+    @ident.setter
+    def ident(self, value):
+        self._ident = value
 
     def post_json(self, url, data):
         data = json.dumps(data)
