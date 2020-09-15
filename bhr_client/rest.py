@@ -126,7 +126,7 @@ class Client:
         }
         r = self.s.get(self.host + '/bhr/list.csv', params=params, timeout=self.timeout)
         r.raise_for_status()
-        return csv.DictReader(r.iter_lines())
+        return csv.DictReader(r.iter_lines(decode_unicode=True))
 
     def tail(self, source=None, start=None):
         d = Delayer()
