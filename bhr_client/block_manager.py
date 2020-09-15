@@ -1,11 +1,11 @@
 import signal
 import time
-import random
 import arrow
 import datetime
 
-WATCHDOG_TIMEOUT = 60 #seconds
-UNBLOCK_INTERVAL = 30 #seconds
+WATCHDOG_TIMEOUT = 60  # seconds
+UNBLOCK_INTERVAL = 30  # seconds
+
 
 def shift_backwards(ts, minutes=5):
     """parse and shift a timestamp backwards 5 minutes"""
@@ -17,17 +17,19 @@ def shift_backwards(ts, minutes=5):
         value = value[:-6] + 'Z'
     return value
 
+
 class DummyStdoutBlocker:
     def __init__(self):
         pass
 
     def block_many(self, records):
         for r in records:
-            print time.ctime(), "block", r['cidr']
+            print(time.ctime(), "block", r['cidr'])
 
     def unblock_many(self, records):
         for r in records:
-            print time.ctime(), "unblock", r['block']['cidr']
+            print(time.ctime(), "unblock", r['block']['cidr'])
+
 
 class BlockManager:
     def __init__(self, client, blocker):

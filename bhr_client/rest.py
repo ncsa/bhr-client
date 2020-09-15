@@ -1,6 +1,4 @@
-import signal
 import requests
-import time
 import json
 import csv
 import os
@@ -9,6 +7,7 @@ import time
 js_headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
 
 DEFAULT_TIMEOUT = 30
+
 
 class Delayer:
     def __init__(self, initial=0, lower=1, upper=60, factor=2, sleep=time.sleep):
@@ -23,7 +22,7 @@ class Delayer:
         self.delay = self.initial
 
     def sleep(self):
-        #logger.debug('sleeping for {}s'.format(self.delay))
+        # logger.debug('sleeping for {}s'.format(self.delay))
         self._sleep(self.delay)
         if self.delay == 0:
             self.delay = self.lower
@@ -36,6 +35,7 @@ class Delayer:
             self.reset()
         else:
             self.sleep()
+
 
 class Client:
     """BHR Client"""
@@ -57,7 +57,7 @@ class Client:
 
     def post_json(self, url, data):
         data = json.dumps(data)
-        resp =  self.s.post(self.host + url, data, headers=js_headers, timeout=self.timeout)
+        resp = self.s.post(self.host + url, data, headers=js_headers, timeout=self.timeout)
         resp.raise_for_status()
         return resp.json()
 
@@ -142,7 +142,6 @@ class Client:
                 last_cidr = r['cidr']
                 had_data = True
             d.sleep_or_reset(had_data)
-            
 
     def set_unblocked(self, records):
         """Mark a block record as unblocked
@@ -150,7 +149,7 @@ class Client:
         This is not meant to be called directly
         """
         ids = [r['id'] for r in records]
-        data = {"ids":ids}
+        data = {"ids": ids}
         return self.post_json('/bhr/api/set_unblocked_multi', data)
 
     def set_blocked(self, records):
@@ -159,9 +158,8 @@ class Client:
         This is not meant to be called directly
         """
         ids = [r['id'] for r in records]
-        data = {"ids":ids}
+        data = {"ids": ids}
         return self.post_json('/bhr/api/set_blocked_multi/' + self.ident, data)
-        return resp
 
     def get_block_queue(self, timeout=0, added_since=None):
         params = {
@@ -188,6 +186,7 @@ class Client:
         """Return Current block stats"""
         return self.get_json('/bhr/api/stats')
 
+
 def login(host, token=None, username=None, password=None, ident=None, ssl_no_verify=False, timeout=DEFAULT_TIMEOUT):
     """Create an authenticated client object.  To authenticate pass either a token or a username + password.
 
@@ -213,6 +212,7 @@ def login(host, token=None, username=None, password=None, ident=None, ssl_no_ver
     if not authenticated:
         raise Exception("token or (username + password) required")
     return Client(host, s, ident, timeout)
+
 
 def login_from_env():
     """Create an authenticated client object using environment variables.  This simply calls :func:`login`.
