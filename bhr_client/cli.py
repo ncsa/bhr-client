@@ -1,7 +1,8 @@
 import click
 import getpass
 import json
-from bhr_client.rest import login, login_from_env
+from bhr_client.rest import login
+
 
 @click.group()
 @click.option("--host",     envvar="BHR_HOST",      default="http://localhost")
@@ -16,6 +17,7 @@ def cli(ctx, host, username, password, token, ssl_no_verify):
     client = login(host, token=token, username=username, password=password, ssl_no_verify=ssl_no_verify)
     ctx.obj = client
 
+
 @cli.command()
 @click.argument('cidr')
 @click.pass_obj
@@ -23,11 +25,13 @@ def query(client, cidr):
     for r in client.query(cidr):
         click.echo("{cidr} {added} {unblock_at} {source} {who} {why}".format(**r))
 
+
 @cli.command()
 @click.pass_obj
 def list(client):
     for r in client.get_expected():
         click.echo(r['cidr'])
+
 
 @cli.command()
 @click.pass_obj
@@ -44,6 +48,7 @@ def stats(client):
         K = click.style(k, fg="green")
         click.echo("source %s: %d" % (K, v))
 
+
 @cli.command()
 @click.argument('cidr', nargs=-1)
 @click.option('--source', '-s', default='cli')
@@ -55,11 +60,13 @@ def stats(client):
 @click.pass_obj
 def block(client, cidr, source, why, duration, autoscale, skip_whitelist, extend):
     for addr in cidr:
-        block = client.block(cidr=addr, source=source, why=why, duration=duration, autoscale=autoscale, skip_whitelist=skip_whitelist, extend=extend)
+        block = client.block(cidr=addr, source=source, why=why, duration=duration, autoscale=autoscale,
+                             skip_whitelist=skip_whitelist, extend=extend)
         if 'cidr' in block:
             click.echo("{cidr} {source} {who} {why} {added} {unblock_at}".format(**block))
         else:
             click.secho(str(block), fg='red')
+
 
 @cli.command()
 @click.argument('cidr', nargs=-1)
@@ -70,6 +77,7 @@ def unblock(client, cidr, why):
         resp = client.unblock_now(cidr=addr, why=why)
         click.echo(resp)
 
+
 @cli.command()
 @click.option('--source', '-s', required=False)
 @click.option('--start', required=False)
@@ -77,6 +85,7 @@ def unblock(client, cidr, why):
 def tail(client, source, start):
     for rec in client.tail(source=source, start=start):
         click.echo(json.dumps(rec))
+
 
 def main():
     cli()

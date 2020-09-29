@@ -1,7 +1,8 @@
 def chunk(l, n):
     """ Yield successive n-sized chunks from l.  """
-    for i in xrange(0, len(l), n):
+    for i in range(0, len(l), n):
         yield l[i:i+n]
+
 
 class SourceBlocker:
     must_exist = False
@@ -46,19 +47,19 @@ class SourceBlocker:
             if 'duration' not in record:
                 record['duration'] = self.duration
             record['extend'] = True
-            #If we are blocking indefinitely, and it is already blocked, do nothing
+            # If we are blocking indefinitely, and it is already blocked, do nothing
             if not record['duration'] and cidr in current_cidrs:
                 continue
             block_records.append(record)
 
         for blocks_chunk in chunk(block_records, 100):
             for record in blocks_chunk:
-                print "Block", record
+                print("Block", record)
             self.client.mblock(blocks_chunk)
 
         if self.must_exist:
             for cidr in current_cidrs:
                 if cidr in wanted or cidr + '/32' in wanted:
                     continue
-                print "Remove", cidr
+                print("Remove", cidr)
                 self.client.unblock_now(cidr, "removed from source")
