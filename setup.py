@@ -25,6 +25,7 @@ setup(name='bhr-client',
       entry_points={
         'console_scripts': [
           'bhr-client = bhr_client.cli:main',
+          'bhr-client-batch = bhr_client.batch:main',
           'bhr-client-run-stdout = bhr_client.run:main',
           ]
         }
