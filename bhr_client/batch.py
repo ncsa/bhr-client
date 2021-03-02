@@ -13,7 +13,7 @@ def main():
     args = parser.parse_args()
 
     with open(args.file,"r") as f:
-        for line in f:
+        for line.rstrip() in f:
             bhr.block(cidr=line, source="BHR Client Batch", why=args.why, duration=args.time)
 
 if __name__ == "__main__":
