@@ -31,3 +31,15 @@ See http://bhr-client.readthedocs.org/en/latest/ for full docs
       u'url': u'http://localhost:8000/bhr/api/blocks/359147/',
       u'who': u'admin',
       u'why': u'because!'}]
+
+
+## Batch Use Example
+
+This example assumes the existence of a file `blocks.txt` full of block addresses - one per line.
+
+```sh
+python -m venv env
+./env/scripts/activate
+python setup.py install
+bhr-client batch --file blocks.txt --why "Malicious activity." --time "24mo"
+```
