@@ -86,6 +86,24 @@ def tail(client, source, start):
     for rec in client.tail(source=source, start=start):
         click.echo(json.dumps(rec))
 
+@cli.command()
+@click.option('--source', '-s', default='cli')
+@click.option('--duration', '-d', default='1d')
+@click.option('--why', '-w', required=True)
+@click.option('--autoscale', '-a', is_flag=True, default=False)
+@click.option('--skip-whitelist', is_flag=True, default=False)
+@click.option('--extend', is_flag=True, default=False)
+@click.option("--file", "-f", default="/dev/stdin")
+@click.pass_obj
+def batch(client, source, why, duration, autoscale, skip_whitelist, extend, file):
+    with open(file,"r") as f:
+        for line in f:
+            addr = line.rstrip()
+            block = client.block(cidr=addr, source=source, why=why, duration=duration, autoscale=autoscale, skip_whitelist=skip_whitelist, extend=extend)
+            if 'cidr' in block:
+                click.echo("{cidr} {source} {who} {why} {added} {unblock_at}".format(**block))
+            else:
+                click.secho(str(block), fg='red')
 
 def main():
     cli()
