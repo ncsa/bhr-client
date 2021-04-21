@@ -37,9 +37,28 @@ See http://bhr-client.readthedocs.org/en/latest/ for full docs
 
 This example assumes the existence of a file `blocks.txt` full of block addresses - one per line.
 
+**One-time Initial Setup:**
+
 ```sh
 python -m venv env
 ./env/scripts/activate
-python setup.py install
-bhr-client batch --file blocks.txt --why "Malicious activity." --time "24mo"
+pip install bhr-client[cli]
+```
+
+**For each future in - in Bash:**
+
+```sh
+./env/scripts/activate
+export BHR_TOKEN=abc91639287637189236193671983619783619c4
+export BHR_HOST=http://localhost:8000
+bhr-client batch --file blocks.txt --why "Malicious activity." --duration "24mo"
+```
+
+**For each future in - in PowerShell:**
+
+```powershell
+./env/scripts/activate
+$env:BHR_TOKEN='abc91639287637189236193671983619783619c4'
+$env:BHR_HOST='http://localhost:8000'
+bhr-client batch --file blocks.txt --why "Malicious activity." --duration "24mo"
 ```
